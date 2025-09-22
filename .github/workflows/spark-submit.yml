@@ -1,0 +1,41 @@
+name: Submit Spark Jobs
+
+on:
+  push:
+    paths:
+      - 'spark-jobs/**'
+      - 'examples/spark-jobs/**'
+  workflow_dispatch:
+    inputs:
+      job_file:
+        description: 'Spark job YAML file path'
+        required: true
+        default: 'examples/spark-jobs/pyspark-example.yaml'
+
+jobs:
+  submit-spark-job:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name testing-eks-cluster
+    
+    - name: Submit Spark Job
+      run: |
+        JOB_FILE="${{ github.event.inputs.job_file || 'examples/spark-jobs/pyspark-example.yaml' }}"
+        ./scripts/submit-spark-job.sh "$JOB_FILE"
+    
+    - name: Monitor Job Status
+      run: |
+        JOB_NAME=$(grep "name:" "${{ github.event.inputs.job_file || 'examples/spark-jobs/pyspark-example.yaml' }}" | head -1 | awk '{print $2}')
+        echo "Monitoring job: $JOB_NAME"
+        kubectl get sparkapplication $JOB_NAME -n spark-operator -o yaml

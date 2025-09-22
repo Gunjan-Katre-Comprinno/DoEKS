@@ -1,0 +1,15 @@
+ingress:
+  annotations: ${annotations}
+       
+persistence:
+  storageClassName: "${storageClassName}"
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.${prometheus_namespace}.svc.cluster.local
+        access: proxy
+        isDefault: true

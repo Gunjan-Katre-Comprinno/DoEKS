@@ -1,0 +1,19 @@
+# YuniKorn Helm values template
+image:
+  repository: apache/yunikorn
+  tag: scheduler-1.5.0
+
+service:
+  type: ClusterIP
+  port: 9080
+
+embedAdmissionController: true
+
+admissionController:
+  image:
+    repository: apache/yunikorn
+    tag: admission-1.5.0
+
+configuration:
+  queues: |
+    # Queue configuration loaded from ConfigMap

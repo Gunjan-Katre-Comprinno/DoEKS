@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: yunikorn-admin
+  namespace: ${namespace}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: yunikorn-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: yunikorn-admin
+  namespace: ${namespace}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yunikorn-scheduler
+  namespace: ${namespace}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yunikorn-scheduler
+  template:
+    metadata:
+      labels:
+        app: yunikorn-scheduler
+    spec:
+      serviceAccountName: yunikorn-admin
+      containers:
+      - name: yunikorn-scheduler-k8s
+        image: apache/yunikorn:scheduler-1.5.0
+        ports:
+        - containerPort: 9080
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/yunikorn/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: yunikorn-configs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yunikorn-service
+  namespace: ${namespace}
+spec:
+  selector:
+    app: yunikorn-scheduler
+  ports:
+  - port: 9080
+    targetPort: 9080

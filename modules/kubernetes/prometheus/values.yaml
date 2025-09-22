@@ -1,0 +1,38 @@
+#=================================================================================================//
+#    Copyright 2023 Comprinno Technologies Pvt. Ltd.
+  
+#    Comprinno Technologies Pvt. Ltd. owns all intellectual property rights in the software and associated
+#    documentation files (the "Software"). Permission is hereby granted, to any person
+#    obtaining a copy of this software, to use the Software only for internal use by
+#    the licensee. Transfer, distribution, and sale of copies of the Software or any
+#    derivative works based on the Software, are not permitted.
+  
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+#    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+#    PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+#    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+#    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  
+#=================================================================================================//
+server:
+  ingress:
+    ## alertmanager Ingress annotations
+    ##
+    annotations: ${annotations}
+
+kube-state-metrics:
+  ## If false, kube-state-metrics sub-chart will not be installed
+  ##
+  enabled: true
+
+  # Comma-separated list of additional Kubernetes label keys that will be used in the resource's
+  # labels metric. By default the metric contains only name and namespace labels.
+  # To include additional labels, provide a list of resource names in their plural form and Kubernetes
+  # label keys you would like to allow for them (Example: '=namespaces=[k8s-label-1,k8s-label-n,...],pods=[app],...)'.
+  # A single '*' can be provided per resource instead to allow any labels, but that has
+  # severe performance implications (Example: '=pods=[*]').
+  # metricLabelsAllowlist:
+  # - pods=[*]
+
+    

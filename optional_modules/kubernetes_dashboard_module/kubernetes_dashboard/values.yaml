@@ -1,0 +1,19 @@
+
+
+ingress:
+  ## Kubernetes Dashboard Ingress labels
+  # labels:
+  #   key: value
+  # Kubernetes Dashboard Ingress annotations
+  annotations: ${annotations}
+
+  customPaths:
+   - pathType: Prefix
+     path: /
+     backend:
+       service:
+         name: >-
+           {{ include "kubernetes-dashboard.fullname" . }}
+         port:
+           # Don't use string here, use only integer value!
+           number: 443

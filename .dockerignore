@@ -1,0 +1,23 @@
+# Ignore Dockerfile
+Dockerfile
+
+# Ignore Terraform provider files
+aws_base_infra_providers.tf
+kubernetes_service_infra_providers.tf
+
+# Ignore Terraform variable files
+values.tfvars
+flag.tfvars
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore Readme.md
+Readme.md
+bundle_Readme.md
+
+#optional modules and bundle.sh
+optional_modules
+bundle.sh
+EKSBoilerplateTerrraformTestCases*

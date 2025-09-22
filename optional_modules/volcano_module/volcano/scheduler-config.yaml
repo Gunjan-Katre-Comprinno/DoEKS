@@ -1,0 +1,53 @@
+actions: "${join(",", volcano_conf.actions)}"
+tiers:
+- plugins:
+%{ for plugin in volcano_conf.plugins ~}
+  - name: ${plugin}
+%{ endfor ~}
+- plugins:
+  - name: nodeorder
+    arguments:
+      leastrequested.weight: 1
+      mostrequested.weight: 0
+      nodeaffinity.weight: 2
+      podaffinity.weight: 2
+      tainttoleration.weight: 2
+proportional:
+  resource: cpu
+%{ if length(volcano_conf.queues) > 0 ~}
+queues:
+%{ for queue_name, queue_config in volcano_conf.queues ~}
+- name: ${queue_name}
+  weight: ${queue_config.weight}
+  capability:
+    cpu: ${queue_config.capability.cpu}
+    memory: ${queue_config.capability.memory}
+  reclaimable: ${queue_config.reclaimable}
+%{ endfor ~}
+%{ else ~}
+queues:
+- name: default
+  weight: 1
+  capability:
+    cpu: "1000"
+    memory: "1000Gi"
+  reclaimable: true
+- name: ml-training
+  weight: 3
+  capability:
+    cpu: "2000"
+    memory: "2000Gi"
+  reclaimable: true
+- name: hpc-batch
+  weight: 2
+  capability:
+    cpu: "1500"
+    memory: "1500Gi"
+  reclaimable: true
+- name: dev
+  weight: 1
+  capability:
+    cpu: "500"
+    memory: "500Gi"
+  reclaimable: true
+%{ endif ~}
