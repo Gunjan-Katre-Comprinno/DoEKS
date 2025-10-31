@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_date
+from datetime import datetime
 
 # Create Spark session
 spark = SparkSession.builder.appName("TestSparkJob").getOrCreate()
@@ -14,6 +15,7 @@ df_with_date = df.withColumn("process_date", current_date())
 
 # Show results
 print("=== Test Spark Job Results ===")
+print(f"Job executed at: {datetime.now()}")  
 df_with_date.show()
 
 # Count records
