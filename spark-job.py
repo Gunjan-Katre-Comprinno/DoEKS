@@ -1,9 +1,14 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import current_date
+from pyspark.sql.functions import current_date, lit
 from datetime import datetime
 
-# Create Spark session
-spark = SparkSession.builder.appName("TestSparkJob").getOrCreate()
+# Create Spark session with Spark 4.0.0 optimizations
+spark = SparkSession.builder \
+    .appName("TestSparkJob") \
+    .config("spark.sql.adaptive.enabled", "true") \
+    .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
+    .config("spark.sql.adaptive.skewJoin.enabled", "true") \
+    .getOrCreate()
 
 # Create test DataFrame
 data = [("Alice", 25), ("Bob", 30), ("Charlie", 35)]
@@ -25,4 +30,3 @@ print(f"Total records processed: {record_count}")
 spark.stop()
 print("Spark job completed successfully!")
 #end
-
